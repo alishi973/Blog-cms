@@ -40,32 +40,32 @@ module.exports = buildSchema(`
     }
 
 
-    type UserInputData {
+    input UserInputData {
         email:String!
         password:String!
         name:String!
-        status:Strign!
+        status:String
     }
 
-    type PostInputData {
+    input PostInputData {
         title:String!
         content:String!
         images:[String!]!
     }
 
-    type Query {
-        login(email:String! ,password:String!): AuthData!
+    type RootQuery {
+        login(email:String!  password:String!): AuthData!
         posts(page:Int): PostData!
-        post(id:ID!) Post
+        post(id:ID!): Post!
     }
 
-    type Mutation {
-        createNewUser(userInput: UserInputData!): User!
-        createNewPost(postInput: PostInputData!): Post!
+    type RootMutation {
+        signUp(user: UserInputData!): User!
+        createNewPost(post: PostInputData): Post!
     }
 
     schema {
-        query: Query
-        mutation: Mutation
+        query: RootQuery
+        mutation: RootMutation
     }
 `);
