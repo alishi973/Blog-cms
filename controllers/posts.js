@@ -8,5 +8,17 @@ module.exports = {
     await newPost.save();
     return newPost;
   },
-  
+  post: async ({ search }) => {
+    try {
+      return (
+        (await Post.findById(search.id).populate('creator', '-password')) ||
+        (await Post.findOne({ slug: search.slug }).populate('creator', '-password'))
+      );
+    } catch (err) {
+      return ShowError(404, 'Post NotFound!');
+    }
+  },
+  likePost: ({ id }) => {
+    Post.LikePost(id);
+  },
 };

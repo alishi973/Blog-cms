@@ -5,6 +5,7 @@ module.exports = buildSchema(`
         _id: ID!
         title: String
         content: String
+        slug:String
         images: [String]
         likes:[String]
         comments : [Comment]
@@ -52,16 +53,21 @@ module.exports = buildSchema(`
         content:String!
         images:[String]
     }
+    input FindPost {
+        slug:String
+        id:ID
+    }
 
     type RootQuery {
         login(email:String!  password:String!): AuthData!
-        posts(page:Int): PostData!
-        post(id:ID!): Post!
+        posts(page:Int): PostData!     
+        post(search:FindPost): Post!
     }
 
     type RootMutation {
         signUp(user: UserInputData!): User!
         addPost(post: PostInputData): Post!
+        likePost(id:ID!): String!
     }
 
     schema {
@@ -69,3 +75,5 @@ module.exports = buildSchema(`
         mutation: RootMutation
     }
 `);
+
+/* post(id:ID!): Post! */
