@@ -1,12 +1,12 @@
 const User = require('../models/users');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const Error = require('../helpers/Error');
+const ShowError = require('../helpers/ShowError');
 
 module.exports = {
   login: async ({ email, password }) => {
-    const existUser = await User.findOne({ email, password: bcrypt.hash(password, +process.env.SALT) });
-    if (!existUser) Error(404, 'User With Password NotFound');
+    const existUser = await User.findOne({ email });
+    if (!existUser || !bcrypt.compareSync(password, existUser.password)) return ShowError(404, 'User With Password NotFound');
     const token = jwt.sign(
       {
         id: `${existUser._id}`,
@@ -15,12 +15,12 @@ module.exports = {
       process.env.JWT,
       { expiresIn: '15m' },
     );
-    return { token, userId: `${existUser._id}` };
+    return { token: token, userId: `${existUser._id}` };
   },
   signUp: async ({ user }) => {
     const existUser = await User.findOne({ email: user.email });
-    //Validation
-    if (existUser) throw new Error('User Exist');
+    //TODO:Add Validation
+    if (existUser) throw ShowError('User Exist');
     const newUser = new User(user);
     newUser.password = await bcrypt.hash(newUser.password, +process.env.SALT);
     newUser.save();
