@@ -4,7 +4,7 @@ const app = express();
 const graphQLHttp = require('express-graphql');
 const mongoose = require('mongoose');
 
-const { corsMiddleware } = require('./middlewares');
+const { corsMiddleware, authMiddleware } = require('./middlewares');
 const graphiqlSchema = require('./graphql/schema');
 const graphiqlResolver = require('./graphql/resolver');
 
@@ -12,6 +12,9 @@ app.disable('x-powered-by');
 
 //Allow Cross Site Origin Resource Sharing
 app.use(corsMiddleware);
+
+//JWT Middleware
+app.use(authMiddleware);
 
 app.get(/\/__graphql/, (req, res) => res.sendStatus(403));
 

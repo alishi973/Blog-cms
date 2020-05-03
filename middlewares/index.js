@@ -1,4 +1,4 @@
 const authMiddleware = require('./auth');
 const corsMiddleware = require('./cors');
 
-module.exports = { authMiddleware,corsMiddleware };
+module.exports = { authMiddleware, corsMiddleware };
