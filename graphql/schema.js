@@ -7,11 +7,22 @@ module.exports = buildSchema(`
         content: String
         slug:String
         images: [String]
-        likes:[String]
+        likes: mutual
+        view: mutual
         comments : [Comment]
         creator: User
         createdAt: String
         updatedAt: String
+    }
+
+    type mutualAction {
+        mutual:Boolean
+        result:Boolean!
+        count:Int
+    }
+    type mutual {
+        mutual:Boolean
+        count:Int
     }
 
     type Comment {
@@ -26,6 +37,7 @@ module.exports = buildSchema(`
         posts: [Post!]!
         totalPosts: Int!
     }
+
 
     type User {
         _id: ID!
@@ -67,7 +79,8 @@ module.exports = buildSchema(`
     type RootMutation {
         signUp(user: UserInputData!): User!
         addPost(post: PostInputData): Post!
-        likePost(id:ID!): String!
+        likePost(id:String!): mutualAction!
+        dislikePost(id:String!): mutualAction!
     }
 
     schema {

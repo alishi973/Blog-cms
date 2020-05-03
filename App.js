@@ -9,6 +9,7 @@ const graphiqlSchema = require('./graphql/schema');
 const graphiqlResolver = require('./graphql/resolver');
 
 app.disable('x-powered-by');
+app.set('trust proxy', true);
 
 //Allow Cross Site Origin Resource Sharing
 app.use(corsMiddleware);

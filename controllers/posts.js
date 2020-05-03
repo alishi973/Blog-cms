@@ -8,17 +8,14 @@ module.exports = {
     await newPost.save();
     return newPost;
   },
-  post: async ({ search }) => {
-    try {
-      return (
-        (await Post.findById(search.id).populate('creator', '-password')) ||
-        (await Post.findOne({ slug: search.slug }).populate('creator', '-password'))
-      );
-    } catch (err) {
-      return ShowError(404, 'Post NotFound!');
-    }
+  post: async ({ search }, req) => {
+    let targetPost = await Post.findPost(search, req.connection.remoteAddress);
+    if (targetPost === 404) return ShowError(404, 'Post NotFound!');
+
+    targetPost.view = { mutual: targetPost.views.indexOf(req.connection.remoteAddress) !== -1 ? true : false, count: targetPost.views.length };
+    targetPost.likes = { mutual: targetPost.likes.indexOf(req.connection.remoteAddress) !== -1 ? true : false, count: targetPost.likes.length };
+    return targetPost;
   },
-  likePost: ({ id }) => {
-    Post.LikePost(id);
-  },
+  likePost: async ({ id }, req) => await Post.LikePost(id, req.connection.remoteAddress),
+  dislikePost: async ({ id }, req) => await Post.disLikePost(id, req.connection.remoteAddress),
 };
