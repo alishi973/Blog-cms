@@ -3,14 +3,14 @@ const { buildSchema } = require('graphql');
 module.exports = buildSchema(`
     type Post {
         _id: ID!
-        title: String!
-        content: String!
-        images: [String]!
-        likes:[String]!
-        comments : [Comment]!
-        creator: User!
-        createdAt: String!
-        updatedAt: String!
+        title: String
+        content: String
+        images: [String]
+        likes:[String]
+        comments : [Comment]
+        creator: User
+        createdAt: String
+        updatedAt: String
     }
 
     type Comment {
@@ -50,7 +50,7 @@ module.exports = buildSchema(`
     input PostInputData {
         title:String!
         content:String!
-        images:[String!]!
+        images:[String]
     }
 
     type RootQuery {
@@ -61,7 +61,7 @@ module.exports = buildSchema(`
 
     type RootMutation {
         signUp(user: UserInputData!): User!
-        createNewPost(post: PostInputData): Post!
+        addPost(post: PostInputData): Post!
     }
 
     schema {
