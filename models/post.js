@@ -77,6 +77,16 @@ postSchema.methods = {
       return err;
     }
   },
+  deleteComment: function (commentId) {
+    this.comments = this.comments.filter((comment) => comment.id !== commentId);
+    try {
+      this.save();
+      return true;
+    } catch (err) {
+      console.log(err);
+      return false;
+    }
+  },
 };
 
 module.exports = mongoose.model('Post', postSchema);

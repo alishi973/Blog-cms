@@ -91,6 +91,7 @@ module.exports = buildSchema(`
         likePost(id:String!): mutualAction!
         dislikePost(id:String!): mutualAction!
         addComment(comment: CommentInputData!): Boolean
+        deleteComment(commentId:ID! onPost:ID!): Boolean
     }
 
     schema {

@@ -25,4 +25,11 @@ module.exports = {
     const newComment = post.addComment({ text: comment.text, user, date, refer_to: comment.refer_to });
     return newComment;
   },
+  deleteComment: async ({ commentId, onPost }, req) => {
+    const post = await Post.findById(onPost);
+    if (!post) return ShowError(404, 'Post NotFound!');
+    const targetComment = post.comments.find((comment) => comment.id == commentId);
+    if (!targetComment) return ShowError(404, 'Comment NotFound!');
+    return targetComment.user === req.userId ? post.deleteComment(commentId) : false;
+  },
 };
