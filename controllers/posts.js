@@ -15,6 +15,13 @@ module.exports = {
     targetPost.likes = { mutual: targetPost.likes.indexOf(req.connection.remoteAddress) !== -1 ? true : false, count: targetPost.likes.length };
     return targetPost;
   },
+  posts: async ({ page = 1 }) => {
+    const allPost = await Post.find().sort('-createdOn').populate('creator');
+    const paginationStart = 10 * (page - 1) + (page == 1 ? 0 : 1);
+    const paginationEnd = 10 * page;
+    console.log(allPost[0].summary);
+    return { posts: allPost.slice(paginationStart, paginationEnd), totalPosts: Post.countDocuments() };
+  },
   likePost: async ({ id }, req) => await Post.LikePost(id, req.connection.remoteAddress),
   dislikePost: async ({ id }, req) => await Post.disLikePost(id, req.connection.remoteAddress),
   addComment: async ({ comment }, req) => {

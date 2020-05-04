@@ -63,6 +63,10 @@ postSchema.static({
       return 404;
     }
   },
+  allPost: async function ({ page }) {
+    console.log(page);
+    return true;
+  },
 });
 
 postSchema.methods = {

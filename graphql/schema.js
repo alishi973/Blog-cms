@@ -5,11 +5,12 @@ module.exports = buildSchema(`
         _id: ID!
         title: String
         content: String
-        slug:String
+        slug: String
+        summary: String
         images: [String]
         likes: mutual
         view: mutual
-        comments : [Comment]
+        comments: [Comment]
         creator: User
         createdAt: String
         updatedAt: String
@@ -27,15 +28,20 @@ module.exports = buildSchema(`
 
     type Comment {
         _id:ID!
-        user:String
+        user: UserForComment!
         text:String
         date:String
         refer_to:ID
     }
+    type UserForComment {
+        name: String
+        _id: String
+        email: String
+    }
 
 
     type PostData {
-        posts: [Post!]!
+        posts: [Post]!
         totalPosts: Int!
     }
 
@@ -88,8 +94,8 @@ module.exports = buildSchema(`
     type RootMutation {
         signUp(user: UserInputData!): User!
         addPost(post: PostInputData): Post!
-        likePost(id:String!): mutualAction!
-        dislikePost(id:String!): mutualAction!
+        likePost(id:ID!): mutualAction!
+        dislikePost(id:ID!): mutualAction!
         addComment(comment: CommentInputData!): Boolean
         deleteComment(commentId:ID! onPost:ID!): Boolean
     }
