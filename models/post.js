@@ -10,7 +10,7 @@ const postSchema = new Schema(
     slug: { type: String, default: '' },
     views: [{ type: String, require: false, default: [] }],
     likes: [{ type: String, require: false, default: [] }],
-    comments: [{ user: String, text: String, date: Date, refer_to: Schema.Types.ObjectId }],
+    comments: [{ user: String, text: String, date: Date, refer_to: { type: Schema.Types.ObjectId, required: false } }],
     creator: {
       type: Schema.Types.ObjectId,
       ref: 'User',
@@ -64,5 +64,19 @@ postSchema.static({
     }
   },
 });
+
+postSchema.methods = {
+  addComment: function ({ text, user, date, refer_to }) {
+    let post = this;
+    if (!post.comments) post.comments = [];
+    post.comments.push({ user, text, date, refer_to });
+    try {
+      this.save();
+      return true;
+    } catch (err) {
+      return err;
+    }
+  },
+};
 
 module.exports = mongoose.model('Post', postSchema);

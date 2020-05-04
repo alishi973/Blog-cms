@@ -27,11 +27,12 @@ module.exports = buildSchema(`
 
     type Comment {
         _id:ID!
-        user:String!
-        text:String!
-        date:String!
+        user:String
+        text:String
+        date:String
         refer_to:ID
     }
+
 
     type PostData {
         posts: [Post!]!
@@ -65,6 +66,14 @@ module.exports = buildSchema(`
         content:String!
         images:[String]
     }
+
+    input CommentInputData{
+        text: String!
+        onPost: ID!
+        name: String
+        refer_to: ID
+    }
+
     input FindPost {
         slug:String
         id:ID
@@ -81,6 +90,7 @@ module.exports = buildSchema(`
         addPost(post: PostInputData): Post!
         likePost(id:String!): mutualAction!
         dislikePost(id:String!): mutualAction!
+        addComment(comment: CommentInputData!): Boolean
     }
 
     schema {
