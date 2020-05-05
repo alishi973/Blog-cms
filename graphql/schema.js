@@ -84,6 +84,11 @@ module.exports = buildSchema(`
         slug:String
         id:ID
     }
+    input PostEditData {
+        title: String
+        content: String
+        images: [String]
+    }
 
     type RootQuery {
         login(email:String!  password:String!): AuthData!
@@ -93,9 +98,12 @@ module.exports = buildSchema(`
 
     type RootMutation {
         signUp(user: UserInputData!): User!
+
         addPost(post: PostInputData): Post!
+        editPost(postId:ID! postData:PostEditData): Post
         likePost(id:ID!): mutualAction!
         dislikePost(id:ID!): mutualAction!
+
         addComment(comment: CommentInputData!): Boolean
         deleteComment(commentId:ID! onPost:ID!): Boolean
     }

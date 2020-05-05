@@ -1,4 +1,5 @@
 const ShowError = require('../helpers/ShowError');
+const Santizer = require('../helpers/Santizer');
 const Post = require('../models/post');
 module.exports = {
   addPost: async (post, req) => {
@@ -14,6 +15,13 @@ module.exports = {
     targetPost.view = { mutual: targetPost.views.indexOf(req.connection.remoteAddress) !== -1 ? true : false, count: targetPost.views.length };
     targetPost.likes = { mutual: targetPost.likes.indexOf(req.connection.remoteAddress) !== -1 ? true : false, count: targetPost.likes.length };
     return targetPost;
+  },
+  editPost: async ({ postId, postData }, req) => {
+    const post = await Post.findById(postId, { createdAt: 0, updatedAt: 0, comments: 0, likes: 0, views: 0 });
+    if (!post) return ShowError(404, 'Post NotFound!');
+    if (post.creator != req.userId) return ShowError(403, 'Only Author Can Edit Own Post!');
+    postData = Santizer(postData);
+    return await post.editPost(postData);
   },
   posts: async ({ page = 1 }) => {
     const allPost = await Post.find().sort('-createdOn').populate('creator');

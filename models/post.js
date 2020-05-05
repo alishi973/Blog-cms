@@ -91,6 +91,12 @@ postSchema.methods = {
       return { result: true, count: post.likes.length, mutual: true };
     }
   },
+  editPost: async function (postData) {
+    const post = this;
+    Object.assign(post, { ...postData, summary: `${post.content.slice(0, 50)}...` });
+    await post.save();
+    return post;
+  },
 };
 
 module.exports = mongoose.model('Post', postSchema);
