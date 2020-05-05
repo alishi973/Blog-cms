@@ -2,6 +2,7 @@ const User = require('../models/users');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const ShowError = require('../helpers/ShowError');
+const { santizeExclude } = require('../helpers/Santizer');
 
 module.exports = {
   login: async ({ email, password }) => {
@@ -25,5 +26,27 @@ module.exports = {
     newUser.password = await bcrypt.hash(newUser.password, +process.env.SALT);
     newUser.save();
     return newUser;
+  },
+  editUser: async ({ user }, req) => {
+    if (!req.userId) return ShowError(401, 'You Must Login!');
+    const userDB = await User.findById(req.userId);
+    if (!userDB) return ShowError(404, 'User NotFound!');
+
+    user = santizeExclude(user, ['avatar', 'status']);
+
+    if (user.password.newPassword && bcrypt.compareSync(user.password.oldPassword, userDB.password)) {
+      const password = await bcrypt.hash(user.password.newPassword, +process.env.SALT);
+      // Object.assign(userDB, { password });
+      userDB.password = password;
+    } else return ShowError(403, 'Password Incorrect');
+
+    if (user.email) {
+      userDB.email = user.email;
+      //send email with jwt in link
+    }
+
+    userDB.avatar = user.avatar;
+    userDB.status = user.status;
+    return await userDB.save();
   },
 };

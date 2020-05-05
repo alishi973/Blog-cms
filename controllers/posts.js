@@ -1,5 +1,5 @@
 const ShowError = require('../helpers/ShowError');
-const Santizer = require('../helpers/Santizer');
+const { santize } = require('../helpers/Santizer');
 const Post = require('../models/post');
 module.exports = {
   addPost: async (post, req) => {
@@ -20,7 +20,7 @@ module.exports = {
     const post = await Post.findById(postId, { createdAt: 0, updatedAt: 0, comments: 0, likes: 0, views: 0 });
     if (!post) return ShowError(404, 'Post NotFound!');
     if (post.creator != req.userId) return ShowError(403, 'Only Author Can Edit Own Post!');
-    postData = Santizer(postData);
+    postData = santize(postData);
     return await post.editPost(postData);
   },
   posts: async ({ page = 1 }) => {

@@ -51,12 +51,17 @@ module.exports = buildSchema(`
         name: String!
         email: String!
         password: String
+        avatar: String
         status: String!
     }
 
     type AuthData {
         token: String!
         userId: String!
+    }
+    input PasswordEdit {
+        oldPassword:String!
+        newPassword:String!
     }
 
 
@@ -65,6 +70,13 @@ module.exports = buildSchema(`
         password:String!
         name:String!
         status:String
+    }
+    input UserEditData {
+        password: PasswordEdit
+        avatar: String
+        name: String
+        email: String
+        status: String
     }
 
     input PostInputData {
@@ -98,6 +110,7 @@ module.exports = buildSchema(`
 
     type RootMutation {
         signUp(user: UserInputData!): User!
+        editUser(user: UserEditData!): User!
 
         addPost(post: PostInputData): Post!
         editPost(postId:ID! postData:PostEditData): Post
