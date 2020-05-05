@@ -27,28 +27,6 @@ postSchema.pre('save', function (next) {
 });
 
 postSchema.static({
-  LikePost: async function (id, ip) {
-    let Post = this.model('Post');
-    let post = await Post.findById(id);
-    if (post.likes && post.likes.indexOf(ip) > -1) {
-      return { result: false, count: post.likes.length, mutual: true };
-    } else {
-      post.likes = [...(post.likes || []), ip];
-      await post.save();
-      return { result: true, count: post.likes.length, mutual: true };
-    }
-  },
-  disLikePost: async function (id, ip) {
-    let Post = this.model('Post');
-    let post = await Post.findById(id);
-    if (post.likes && post.likes.indexOf(ip) !== -1) {
-      post.likes = post.likes.filter((eachLike) => eachLike !== ip && eachLike);
-      await post.save();
-      return { result: true, count: post.likes.length, mutual: false };
-    } else {
-      return { result: false, count: post.likes.length, mutual: false };
-    }
-  },
   findPost: async function (search, ip) {
     let Post = this.model('Post');
     try {
@@ -89,6 +67,28 @@ postSchema.methods = {
     } catch (err) {
       console.log(err);
       return false;
+    }
+  },
+  disLikePost: async function (req) {
+    const user = req.userId || req.connection.remoteAddress;
+    let post = this;
+    if (post.likes && post.likes.indexOf(user) !== -1) {
+      post.likes = post.likes.filter((eachLike) => eachLike !== user && eachLike);
+      await post.save();
+      return { result: true, count: post.likes.length, mutual: false };
+    } else {
+      return { result: false, count: post.likes.length, mutual: false };
+    }
+  },
+  LikePost: async function (req) {
+    const user = req.userId || req.connection.remoteAddress;
+    let post = this;
+    if (post.likes && post.likes.indexOf(user) > -1) {
+      return { result: false, count: post.likes.length, mutual: true };
+    } else {
+      post.likes = [...(post.likes || []), user];
+      await post.save();
+      return { result: true, count: post.likes.length, mutual: true };
     }
   },
 };

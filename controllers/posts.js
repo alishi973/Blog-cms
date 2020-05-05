@@ -22,8 +22,14 @@ module.exports = {
     console.log(allPost[0].summary);
     return { posts: allPost.slice(paginationStart, paginationEnd), totalPosts: Post.countDocuments() };
   },
-  likePost: async ({ id }, req) => await Post.LikePost(id, req.connection.remoteAddress),
-  dislikePost: async ({ id }, req) => await Post.disLikePost(id, req.connection.remoteAddress),
+  likePost: async ({ id }, req) => {
+    const post = await Post.findById(id);
+    return post.LikePost(req);
+  },
+  dislikePost: async ({ id }, req) => {
+    const post = await Post.findById(id);
+    return post.disLikePost(req);
+  },
   addComment: async ({ comment }, req) => {
     const post = await Post.findById(comment.onPost);
     if (!post) return ShowError(404, 'Post NotFound!');
