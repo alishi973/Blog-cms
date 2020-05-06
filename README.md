@@ -1,6 +1,6 @@
 # Blog-cms
 Simple Blog CMS Backend (Learning Purpose)
-Using ``express-graphql``,``mongoose``
+Using ``apollo-server``,``mongoose``
 
 ## Feature
 #### Post
@@ -25,12 +25,10 @@ Here Is PostMan [Link](https://www.getpostman.com/collections/141c303bb4daf39ff6
 ### RoadMap
 1-Remove Post
 
-2-Remove Comment
+2-Deactive User
 
-3-Deactive User
+3-Change Mail
 
-4-Change Mail
+4-Add Validation
 
-5-Add Validation
-
-6-Caching
+5-Caching
